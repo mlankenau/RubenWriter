@@ -19,7 +19,7 @@ public class BookDAO {
 	}
 	
 	public static String getText(int nwords) throws Exception {		
-		InputStream inputStream = new FileInputStream("books\\project_gutenberg.txt");
+		InputStream inputStream = new FileInputStream("books/project_gutenberg.txt");
 		InputStreamReader streamReader = new java.io.InputStreamReader(inputStream, "UTF-8");
 		
 		StringBuffer buffer = new StringBuffer();
