@@ -8,16 +8,17 @@ public class Network {
 	public static void start() {		
 		Process p;
 		try {
-			p = Runtime.getRuntime().exec("/sbin/iptables", new String[] { "--delete", "OUTPUT",  "1"});
+			p = Runtime.getRuntime().exec("/sbin/iptables -D OUTPUT 1");			
 			readStream(p);
 			p.waitFor();
+			System.out.println("Exit valud of iptables: "+ p.exitValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	    		
 	}
 
 	private static void readStream(Process p) throws IOException {
-		InputStreamReader reader = new InputStreamReader(p.getInputStream());
+		InputStreamReader reader = new InputStreamReader(p.getErrorStream());
 		int c;
 		while ((c = reader.read()) != -1) {
 			System.out.print((char)c);
@@ -27,9 +28,10 @@ public class Network {
 	public static void stop() {		
 		Process p;
 		try {
-			p = Runtime.getRuntime().exec("/sbin/iptables", new String[] { "-A", "OUTPUT", "-j", "DROP"});
+			p = Runtime.getRuntime().exec("/sbin/iptables -A OUTPUT -j DROP");
 			readStream(p);
 			p.waitFor();
+			System.out.println("Exit valud of iptables: "+ p.exitValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	    		
