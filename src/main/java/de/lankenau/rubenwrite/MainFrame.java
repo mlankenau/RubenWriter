@@ -231,7 +231,7 @@ public class MainFrame extends JFrame {
 	public void stopInternet() {
 		btnStart.setEnabled(true);
 		btnEnd.setEnabled(false);
-		Network.start();
+		Network.stop();
 	}
 	
 	public static void main(String[] args) {
