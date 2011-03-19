@@ -28,7 +28,7 @@ public class Network {
 	public static void stop() {		
 		Process p;
 		try {
-			p = Runtime.getRuntime().exec("/sbin/iptables -A OUTPUT -j DROP");
+			p = Runtime.getRuntime().exec("/sbin/iptables -A OUTPUT -j REJECT");
 			readStream(p);
 			p.waitFor();
 			System.out.println("Exit valud of iptables: "+ p.exitValue());
