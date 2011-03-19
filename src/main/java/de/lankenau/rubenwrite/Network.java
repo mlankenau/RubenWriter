@@ -6,15 +6,17 @@ import java.io.InputStreamReader;
 
 public class Network {
 	public static void start() {		
-		Process p;
-		try {
-			p = Runtime.getRuntime().exec("/sbin/iptables -D OUTPUT 1");			
-			readStream(p);
-			p.waitFor();
-			System.out.println("Exit valud of iptables: "+ p.exitValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	    		
+		for (int i=0; i<2; i++) {
+			Process p;
+			try {
+				p = Runtime.getRuntime().exec("/sbin/iptables -D OUTPUT 1");			
+				readStream(p);
+				p.waitFor();
+				System.out.println("Exit valud of iptables: "+ p.exitValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	    	
+		}	
 	}
 
 	private static void readStream(Process p) throws IOException {

@@ -190,28 +190,32 @@ public class MainFrame extends JFrame {
 		}		
 	}
 
+
+	boolean terminateInternet = false;
+
 	public void startInternet() {
 		editor.setEnabled(false);
 		btnCheck.setEnabled(false);
 		btnStart.setEnabled(false);
 		btnEnd.setEnabled(true);
 		Network.start();
-		
-		Thread thread = new Thread(new Runnable() {
+		terminateInternet = false;		
+		Thread countdownThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				runInternet();
 			}			
 		});
-		thread.start();
+		countdownThread.start();
 	}
 	
 	
 	public void runInternet() {
 		Date startTime = new Date();
-		while (true) {
+		int timeLeft = 0;
+		while (!terminateInternet) {
 			long timeUsed = ((new Date()).getTime() - startTime.getTime()) / 1000L;
-			int timeLeft = duration - (int) timeUsed;
+			timeLeft = duration - (int) timeUsed;
 			
 			txtDuration.setText(formatTime(timeLeft));
 			try {
@@ -225,10 +229,12 @@ public class MainFrame extends JFrame {
 			}
 		}
 		stopInternet();
+		duration = timeLeft;
 	}
 	
 	
 	public void stopInternet() {
+		terminateInternet = true;
 		btnStart.setEnabled(true);
 		btnEnd.setEnabled(false);
 		Network.stop();
