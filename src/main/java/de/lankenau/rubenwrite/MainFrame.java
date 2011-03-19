@@ -37,7 +37,7 @@ public class MainFrame extends JFrame {
 	
 	public MainFrame() {
 		try {
-			text = BookDAO.getText(200);
+			text = BookDAO.getText(150);
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, e.toString());
@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
 		getContentPane().setLayout(new GridBagLayout());
 		
 		setTitle("Simple example");
-		setSize(800, 600);
+		setSize(1300, 1000);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
@@ -108,7 +108,7 @@ public class MainFrame extends JFrame {
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new FlowLayout());
 		btnCheck = new JButton();
-		btnCheck.setText("Prüfen");
+		btnCheck.setText("Pruefen");
 		btnCheck.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
