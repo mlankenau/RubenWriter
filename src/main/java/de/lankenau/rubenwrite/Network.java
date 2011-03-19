@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class Network {
 	public static void start() {		
-		for (int i=0; i<2; i++) {
+		for (int i=0; i<3; i++) {
 			Process p;
 			try {
 				p = Runtime.getRuntime().exec("/sbin/iptables -D OUTPUT 1");			
