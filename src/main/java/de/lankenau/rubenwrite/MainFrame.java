@@ -137,7 +137,7 @@ public class MainFrame extends JFrame {
 		
 		
 		btnEnd = new JButton("Internet Stoppen");
-		controlPanel.add(btnEnd);
+		//controlPanel.add(btnEnd);
 		btnEnd.setEnabled(false);
 		btnEnd.addActionListener( new ActionListener() {
 
