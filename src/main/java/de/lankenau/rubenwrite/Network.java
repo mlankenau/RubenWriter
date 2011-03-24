@@ -2,47 +2,33 @@ package de.lankenau.rubenwrite;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.io.*;
 
 public class Network {
 	public static void start() {		
-		for (int i=0; i<3; i++) {
-			Process p;
-			try {
-				p = Runtime.getRuntime().exec("/sbin/iptables -D OUTPUT 1");			
-				readStream(p);
-				p.waitFor();
-				System.out.println("Exit valud of iptables: "+ p.exitValue());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}	    	
+		try {
+			File f = new File("/tmp/inet_on");
+			f.createNewFile();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	private static void readStream(Process p) throws IOException {
-		InputStreamReader reader = new InputStreamReader(p.getErrorStream());
-		int c;
-		while ((c = reader.read()) != -1) {
-			System.out.print((char)c);
-		}
-	}
 
 	public static void stop() {		
-		Process p;
 		try {
-			p = Runtime.getRuntime().exec("/sbin/iptables -A OUTPUT -j REJECT");
-			readStream(p);
-			p.waitFor();
-			System.out.println("Exit valud of iptables: "+ p.exitValue());
-		} catch (Exception e) {
+			File f = new File("/tmp/inet_on");
+			f.delete();
+			stopBrowser();
+		}
+		catch (Exception e) {
 			e.printStackTrace();
-		}	    		
-		stopBrowser();
+		}
 	}
 
 
-// killall firefox-bin
-
+	// killall firefox-bin
         public static void stopBrowser() {
                 Process p;
                 try { 
