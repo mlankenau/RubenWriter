@@ -1,0 +1,6 @@
+cd /opt
+java -jar /opt/RubenWriter-1.0-SNAPSHOT.jar
+iptables -D OUTPUT 1
+iptables -D OUTPUT 1
+iptables -A OUTPUT -j REJECT
+killall firefox-bin
