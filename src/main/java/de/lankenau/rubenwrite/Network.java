@@ -16,7 +16,7 @@ public class Network {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}	    	
-		}	
+		}
 	}
 
 	private static void readStream(Process p) throws IOException {
@@ -37,6 +37,22 @@ public class Network {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	    		
+		stopBrowser();
 	}
+
+
+// killall firefox-bin
+
+        public static void stopBrowser() {
+                Process p;
+                try { 
+                        p = Runtime.getRuntime().exec("/usr/bin/killall firefox-bin");
+                        readStream(p);
+                        p.waitFor();
+                        System.out.println("Exit valud of iptables: "+ p.exitValue());
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
 }
