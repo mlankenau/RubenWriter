@@ -48,7 +48,8 @@ public class BookDAO {
 			resultBuffer.append(sentence);			
 			resultBuffer.append('.');
 		}
-				
+		System.out.println("Wordcount: " + wordCount);		
+		
 		return format(resultBuffer.toString().trim());
 	}
 	
@@ -62,6 +63,8 @@ public class BookDAO {
 		int count = 0;
 		for (char c : input.toCharArray()){ 
 			boolean ignore = false;
+			
+			if (c == '_') c = ' ';
 			
 			if (c == ' ' && (last == ' ' || last == '\t')) ignore = true; 
 			if (c == '\r' || c == '\n') ignore = true;

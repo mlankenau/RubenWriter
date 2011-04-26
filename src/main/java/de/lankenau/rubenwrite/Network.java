@@ -33,7 +33,6 @@ public class Network {
                 Process p;
                 try { 
                         p = Runtime.getRuntime().exec("/usr/bin/killall firefox-bin");
-                        readStream(p);
                         p.waitFor();
                         System.out.println("Exit valud of iptables: "+ p.exitValue());
                 } catch (Exception e) {
