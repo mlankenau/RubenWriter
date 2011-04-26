@@ -33,17 +33,19 @@ public class MainFrame extends JFrame {
 	JButton btnEnd;
 	JTextField txtDuration = null;
 	int duration = 0;
-	final int MAX_DURATION = 60*90;
+	final int MAX_DURATION = 60*120;
 	
 	public MainFrame() {
 		try {
-			text = BookDAO.getText(150);
+			int d = (int) ((new Date().getTime() / (1000 * 60 * 60* 24)) - 15073L);
+			System.out.println("day: " + d);
+			text = BookDAO.getText(200+d);
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, e.toString());
 		}
 
-		Font bigFont = new Font("Serif", Font.PLAIN, 24);
+		Font bigFont = new Font("Serif", Font.PLAIN, 22);
 		
 		getContentPane().setLayout(new GridBagLayout());
 		
@@ -76,19 +78,16 @@ public class MainFrame extends JFrame {
 	
 		editor.getDocument().addDocumentListener(new DocumentListener() {
 
-			@Override
 			public void changedUpdate(DocumentEvent arg0) {
 				calculateTime();
 				btnStart.setEnabled(false);
 			}
 
-			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				calculateTime();
 				btnStart.setEnabled(false);
 			}
 
-			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				calculateTime();	
 				btnStart.setEnabled(false);
@@ -110,7 +109,6 @@ public class MainFrame extends JFrame {
 		btnCheck = new JButton();
 		btnCheck.setText("Pruefen");
 		btnCheck.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				checkText();
 			}			
@@ -126,7 +124,6 @@ public class MainFrame extends JFrame {
 		controlPanel.add(btnStart);
 		btnStart.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				startInternet();
 				
@@ -141,7 +138,6 @@ public class MainFrame extends JFrame {
 		btnEnd.setEnabled(false);
 		btnEnd.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				stopInternet(); 
 				
@@ -201,7 +197,6 @@ public class MainFrame extends JFrame {
 		Network.start();
 		terminateInternet = false;		
 		Thread countdownThread = new Thread(new Runnable() {
-			@Override
 			public void run() {
 				runInternet();
 			}			
