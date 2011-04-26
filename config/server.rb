@@ -29,8 +29,8 @@ class InetServer
 
 
 	def user_online
-		regex = Regexp.new("/usr/lib/gvfs//gvfs-fuse-daemon /home/([a-z]+)/.gvfs")
-		regex.match(`ps ax | grep [g]vfs`)
+		regex = Regexp.new("^([a-z]+) ")
+		regex.match(`ps axu | grep gnom[e]-session`)
 		$1
 	end
 
@@ -75,4 +75,5 @@ class InetServer
 	end
 end
 
+#puts InetServer.new.user_online
 InetServer.new.run
