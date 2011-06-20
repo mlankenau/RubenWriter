@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class BookDAO {
-	static int countWords(String s) {
+	public static int countWords(String s) {
 		int count = 0;
 		StringTokenizer wordTokenizer = new StringTokenizer(s, ", ;\"");
 		while (wordTokenizer.hasMoreTokens()) {
@@ -18,8 +18,10 @@ public class BookDAO {
 		return count;
 	}
 	
-	public static String getText(int nwords) throws Exception {		
-		InputStream inputStream = new FileInputStream("books/project_gutenberg.txt");
+	public static TextBlock getText(int firstWord, int nwords) throws Exception {		
+		
+                InputStream inputStream = new BookDAO().getClass().getClassLoader().getResourceAsStream("die_abenteuer_von_tom_sawyer.txt");
+                //InputStream inputStream = new FileInputStream("books/project_gutenberg.txt");
 		InputStreamReader streamReader = new java.io.InputStreamReader(inputStream, "UTF-8");
 		
 		StringBuffer buffer = new StringBuffer();
@@ -31,26 +33,33 @@ public class BookDAO {
 			buffer.append(charBuf, 0, nread);
 		}
 				
-		StringTokenizer sentenceTokenizer = new StringTokenizer(buffer.toString(), ".!?");
-		ArrayList<String> sentenceList = new ArrayList<String>();
-		while (sentenceTokenizer.hasMoreTokens()) {
-			sentenceList.add(sentenceTokenizer.nextToken());
-		}
+		//StringTokenizer sentenceTokenizer = new StringTokenizer(buffer.toString(), ".!?");
+		//ArrayList<String> sentenceList = new ArrayList<String>();
+		//while (sentenceTokenizer.hasMoreTokens()) {
+		//	sentenceList.add(sentenceTokenizer.nextToken());
+		//}
 		
-		int start = (int) (Math.random()*sentenceList.size());
+		String[] words = buffer.toString().split(" ");
+		
+		int start = firstWord;
 		int wordCount = 0;
 		StringBuffer resultBuffer = new StringBuffer();
-		while (wordCount < nwords) {
-			int i = start % sentenceList.size();
-			start++;
-			String sentence = sentenceList.get(i);
-			wordCount += countWords(sentence);
-			resultBuffer.append(sentence);			
-			resultBuffer.append('.');
+		
+		for (int i=firstWord; i<firstWord+nwords; i++) {
+		    resultBuffer.append(words[i % words.length]);	
+		    resultBuffer.append(' ');
 		}
+		
 		System.out.println("Wordcount: " + wordCount);		
 		
-		return format(resultBuffer.toString().trim());
+		String text = resultBuffer.toString().trim();
+		text = text.replace("[^a]", "");
+		
+                TextBlock block = new TextBlock();
+                block.text = format(text);
+                block.firstWord = firstWord;
+                block.lastWord = firstWord + wordCount - 1;
+		return block;
 	}
 	
 	
@@ -63,6 +72,10 @@ public class BookDAO {
 		int count = 0;
 		for (char c : input.toCharArray()){ 
 			boolean ignore = false;
+			
+			if (!"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\r\n ,.;:-'\"+*!$%&/()[]= öäüÖÄÜß".contains(""+c))
+			    ignore = true;
+			
 			
 			if (c == '_') c = ' ';
 			
