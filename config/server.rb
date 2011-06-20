@@ -4,7 +4,7 @@ class InetServer
 	SIGNAL_FILE = '/tmp/inet_on'
 
 	def initialize
-		@log = Logger.new("/tmp/inet_server.log")
+		@log = Logger.new("/var/log/inet_server.log")
 		@inet_status = :up
 		@signaled = false
 		File.delete SIGNAL_FILE if File.file?(SIGNAL_FILE) 
@@ -29,8 +29,8 @@ class InetServer
 
 
 	def user_online
-		regex = Regexp.new("^([a-z]+) ")
-		regex.match(`ps axu | grep gnom[e]-session`)
+		regex = Regexp.new("session opened for user ([a-z]+)")
+		regex.match(`grep "session opened for user" /var/log/auth.log | grep -v "user root" | tail -n 1`)
 		$1
 	end
 
