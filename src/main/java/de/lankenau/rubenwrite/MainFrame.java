@@ -28,16 +28,18 @@ import javax.swing.event.DocumentListener;
 import de.lankenau.rubenwrite.data.BookDAO;
 import de.lankenau.rubenwrite.data.TextBlock;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.Thread;
 import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 
 public class MainFrame extends JFrame {
 
-    
+    static final String BACKUP_FILE = "rubenwriter.backup";
 
     String text = "No TEXT";
     TextBlock block = null;
@@ -86,6 +88,57 @@ public class MainFrame extends JFrame {
 	return lastPos;
     }
 
+    public void doBackup() {	
+	try {
+	    String text = editor.getText();
+	    FileOutputStream fos = new FileOutputStream(BACKUP_FILE);
+	    OutputStreamWriter writer = new OutputStreamWriter(fos);
+	    writer.write(text);
+	    writer.close();
+	    fos.close();
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}	    
+    }
+    
+    public void doBackupBackground() {
+	new Thread(new Runnable() {
+
+	    public void run() {
+		doBackup();
+	    }
+	    
+	}).start();
+    }
+    
+    public void loadBackup() {
+	if (!new File(BACKUP_FILE).exists()) return;
+	try {
+	    FileInputStream fis = new FileInputStream(BACKUP_FILE);
+	    InputStreamReader reader = new InputStreamReader(fis);
+	    char[] buffer = new char[1024];
+	    int nread;
+	    StringBuffer sbuffer = new StringBuffer();
+	    while ((nread = reader.read(buffer, 0, buffer.length)) > 0) {
+		sbuffer.append(buffer, 0, nread);
+	    }
+	    fis.close();
+	    editor.setText(sbuffer.toString());
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
+    
+    public void deleteBackup() {
+	try {
+	    new File(BACKUP_FILE).delete();
+	}
+	catch (Exception e) {	   
+	}
+    }
+    
     public MainFrame() {
 	try {
 	    int startPos = getLastPos();
@@ -103,7 +156,7 @@ public class MainFrame extends JFrame {
 	getContentPane().setLayout(new GridBagLayout());
 
 	setTitle("Simple example");
-	setSize(1300, 1000);
+	//setSize(1300, 1000);
 	setLocationRelativeTo(null);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -133,16 +186,19 @@ public class MainFrame extends JFrame {
 
 	    public void changedUpdate(DocumentEvent arg0) {
 		calculateTime();
+		doBackupBackground();
 		btnStart.setEnabled(false);
 	    }
 
 	    public void insertUpdate(DocumentEvent arg0) {
 		calculateTime();
+		doBackupBackground();
 		btnStart.setEnabled(false);
 	    }
 
 	    public void removeUpdate(DocumentEvent arg0) {
 		calculateTime();
+		doBackupBackground();
 		btnStart.setEnabled(false);
 	    }
 	});
@@ -203,6 +259,9 @@ public class MainFrame extends JFrame {
 	c.gridx = 0;
 	c.gridy = 2;
 	this.getContentPane().add(controlPanel, c);
+
+        loadBackup();
+
     }
 
     protected static int realTextLength(String text) {
@@ -248,10 +307,11 @@ public class MainFrame extends JFrame {
 	int perc = (int) ((100.f) / orgSize * editSize);
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	log(sdf.format(new Date()) + ", " + perc + ", " + (block.firstWord + nwords));
+	editor.setText("");
 	editor.setEnabled(false);
 	btnCheck.setEnabled(false);
 	btnStart.setEnabled(false);
-	btnEnd.setEnabled(true);
+	deleteBackup();
     }
 
     public void startInternet() {
