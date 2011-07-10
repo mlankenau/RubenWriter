@@ -156,7 +156,7 @@ public class MainFrame extends JFrame {
 	getContentPane().setLayout(new GridBagLayout());
 
 	setTitle("Simple example");
-	//setSize(1300, 1000);
+	setSize(1300, 1000);
 	setLocationRelativeTo(null);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 
