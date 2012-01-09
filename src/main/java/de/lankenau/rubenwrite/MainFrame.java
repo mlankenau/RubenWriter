@@ -51,6 +51,7 @@ public class MainFrame extends JFrame {
     int duration = 0;
     final int MAX_DURATION = 60 * 120;
     final static String LOG_FILE = "/var/log/rubenwriter.log";
+    int loadedLastPos = -1;
 
     public static void log(String msg) {
 	try {
@@ -142,9 +143,8 @@ public class MainFrame extends JFrame {
     public MainFrame() {
 	try {
 	    int startPos = getLastPos();
-	    int d = (int) ((new Date().getTime() / (1000 * 60 * 60 * 24)) - 15073L);
-	    System.out.println("day: " + d);
-	    block = BookDAO.getText(startPos, 200 + d);
+            loadedLastPos = startPos;
+	    block = BookDAO.getText(startPos, 300);
 	    text = block.text;
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -300,18 +300,28 @@ public class MainFrame extends JFrame {
     boolean terminateInternet = false;
 
     public void submit() {
-	int nwords = BookDAO.countWords(editor.getText());
+	if (getLastPos() == loadedLastPos) {
+	  int nwords = BookDAO.countWords(editor.getText());
 
-	float orgSize = realTextLength(text);
-	float editSize = realTextLength(editor.getText());
-	int perc = (int) ((100.f) / orgSize * editSize);
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	log(sdf.format(new Date()) + ", " + perc + ", " + (block.firstWord + nwords));
-	editor.setText("");
-	editor.setEnabled(false);
-	btnCheck.setEnabled(false);
-	btnStart.setEnabled(false);
-	deleteBackup();
+	  float orgSize = realTextLength(text);
+	  float editSize = realTextLength(editor.getText());
+	  int perc = (int) ((100.f) / orgSize * editSize);
+	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	  log(sdf.format(new Date()) + ", " + perc + ", " + (block.firstWord + nwords));
+	  editor.setText("");
+	  editor.setEnabled(false);
+	  btnCheck.setEnabled(false);
+	  btnStart.setEnabled(false);
+	  deleteBackup();
+	}
+	else
+        {
+          btnStart.setText("Betrug!");
+          btnStart.setEnabled(false);
+          btnCheck.setEnabled(false);
+          editor.setEnabled(false);
+
+        }
     }
 
     public void startInternet() {
